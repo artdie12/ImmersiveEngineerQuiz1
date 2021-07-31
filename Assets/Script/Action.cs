@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class Action : MonoBehaviour
 {
 
     public GameObject objAction;
     Vector3 scaleStart;
     public float minScale;
+    public float rotationSpeed;
+    public float zoomSpeed;
 
     
     // Start is called before the first frame update
@@ -15,6 +18,10 @@ public class Action : MonoBehaviour
     {
         scaleStart = objAction.transform.localScale;
     }
+
+
+    
+
 
     Vector2 t1start, t0start;
     Vector2 rotationStart;
@@ -32,7 +39,7 @@ public class Action : MonoBehaviour
 
                 if (t.phase == TouchPhase.Moved)
                 {
-                    objAction.transform.Rotate(new Vector3( t.deltaPosition.y, t.deltaPosition.x,0),90,Space.World);
+                    objAction.transform.Rotate(new Vector3( t.deltaPosition.y, -t.deltaPosition.x,0),90*rotationSpeed,Space.World);
 
 
                 }
@@ -58,24 +65,24 @@ public class Action : MonoBehaviour
                 {
                     float selisih= t1.position.x + t1.position.y - (t0.position.x - t0.position.y);
                     float selisihStart = t1start.x - t0start.x + t1start.y - t0start.y;
-                    float deltaselisih = (t0.deltaPosition.x + t0.deltaPosition.y) - (t1.deltaPosition.x + t1.deltaPosition.y);
+                    float deltaselisih = ((t0.deltaPosition.x + t0.deltaPosition.y) - (t1.deltaPosition.x + t1.deltaPosition.y))*zoomSpeed;
                     if (selisih > 0)
                     {  
-                        objAction.transform.localScale += new Vector3 (deltaselisih,deltaselisih,deltaselisih );
+                        objAction.transform.localScale -= new Vector3 (deltaselisih,deltaselisih,deltaselisih );
                     }
                     else if (selisih<0)
                     {
-                        objAction.transform.localScale -= new Vector3(deltaselisih, deltaselisih, deltaselisih);
+                        objAction.transform.localScale += new Vector3(deltaselisih, deltaselisih, deltaselisih);
                     }
                     
-                    Vector2 distanceTouchStart = new Vector2(Mathf.Abs(t1start.x - t0start.x), Mathf.Abs(t1start.y - t0start.y));
-                    Vector2 distanceTouch = new Vector2(Mathf.Abs(t1.position.x - t0.position.x), Mathf.Abs(t1.position.y - t0.position.y));
-                    float totalDistance = distanceTouch.x + distanceTouch.y - (distanceTouchStart.x + distanceTouchStart.y);
+                    //Vector2 distanceTouchStart = new Vector2(Mathf.Abs(t1start.x - t0start.x), Mathf.Abs(t1start.y - t0start.y));
+                    //Vector2 distanceTouch = new Vector2(Mathf.Abs(t1.position.x - t0.position.x), Mathf.Abs(t1.position.y - t0.position.y));
+                    //float totalDistance = distanceTouch.x + distanceTouch.y - (distanceTouchStart.x + distanceTouchStart.y);
 
-                    if (objAction.transform.localScale.x > scaleStart.x * minScale)
-                    {
-                       objAction.transform.localScale = scaleStart +  (scaleStart * totalDistance*0.1f);
-                    }
+                    //if (objAction.transform.localScale.x > scaleStart.x * minScale)
+                    //{
+                    //   objAction.transform.localScale = scaleStart +  (scaleStart * totalDistance*0.1f);
+                    //}
 
                 }
 
